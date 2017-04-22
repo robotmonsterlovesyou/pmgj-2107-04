@@ -15,7 +15,7 @@ function board:init(options)
 
 	Person:create({
 		layer = self.personLayer,
-		x = 50, y = 768 - 150,
+		x = 50, y = 768 - 120,
 		teamNumber = 1
 	})
 

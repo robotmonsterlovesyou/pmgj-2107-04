@@ -55,7 +55,6 @@ function actionButton:init(options)
     -- Change the button's label text
     button1:setLabel( "" )
 	self.layer:insert(button1)
-
     
 	return button1
 end
