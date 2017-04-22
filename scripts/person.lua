@@ -9,6 +9,8 @@ function person:init(options)
 
 	self.onFloor = true
 
+	self.againstFloor = false
+
 	self.body = display.newRect(x, y, 25, 30) 
 	self.body:setFillColor(1, 0, 0)
 	self.layer:insert(self.body)
@@ -41,12 +43,15 @@ function person:update()
 	local minY = 768 - 120
 	currentCollision = checkCollision(self, self.collisionEntities)
 	if currentCollision then
-		self.body.y = math.min(self.body.y + self.vy, currentCollision.floor.y)
+		self.body.y = math.min(self.body.y + self.vy, getBoundsFromEntity(currentCollision).y)
+		if self.againstFloor == false then
+			self.againstFloor = true
+			self.vy = 0
+		end
 	else
+		self.vy = self.vy + 1
 		self.body.y = self.body.y + self.vy
 	end
-	
-	self.vy = self.vy + 1
 
 	local maxRight = 1000
 	local maxLeft = 24
@@ -89,9 +94,10 @@ function checkCollision (entity, entities)
 
 		local compareBounds = getBoundsFromEntity(entities[k])
 
-		if (entityBounds.y + 10 > compareBounds.y and entityBounds.y < compareBounds.y + compareBounds.height
-			and entityBounds.x > compareBounds.x
-			and entityBounds.x + entityBounds.width < compareBounds.x + compareBounds.width) then
+		if (entityBounds.x < compareBounds.x + compareBounds.width and
+			entityBounds.x + entityBounds.width > compareBounds.x and
+			entityBounds.y < compareBounds.y + compareBounds.height and
+			entityBounds.height + entityBounds.y > compareBounds.y) then
 
 			return entities[k]
 
