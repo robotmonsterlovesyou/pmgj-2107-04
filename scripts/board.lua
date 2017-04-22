@@ -16,46 +16,47 @@ function board:init(options)
 	Person:create({
 		layer = self.personLayer,
 		x = 50, y = 768 - 120,
-		teamNumber = 1
+		teamNumber = 1,
+		collisionEntities = self.entities
 	})
 
  	-- left platform
-	Platform:create({
+	self.entities[0] = Platform:create({
 		layer = self.platformLayer,
 		x = 270, y = 768 - 200,
 		width = 300, height = 15
 	})
 
 	-- right platform 
-	Platform:create({
+	self.entities[1] = Platform:create({
 		layer = self.platformLayer,
 		x = 1024-270, y = 768 - 200,
 		width = 300, height = 15
 	})
 
  	-- left platform
-	Platform:create({
+	self.entities[2] = Platform:create({
 		layer = self.platformLayer,
 		x = 270, y = 768 - 400,
 		width = 300, height = 15
 	})
 
 	-- right platform 
-	Platform:create({
+	self.entities[3] = Platform:create({
 		layer = self.platformLayer,
 		x = 1024-270, y = 768 - 400,
 		width = 300, height = 15
 	})
 
 	-- center platform
-	Platform:create({
+	self.entities[4] = Platform:create({
 		layer = self.platformLayer,
 		x = 1024/2, y = 768 - 300,
 		width = 300, height = 15
 	})
  	
 	-- floor
-	Platform:create({
+	self.entities[5] = Platform:create({
 		layer = self.platformLayer,
 		x = 1024/2, y = 768-90,
 		width = 1024, height = 30
