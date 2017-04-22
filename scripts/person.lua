@@ -5,6 +5,9 @@ function person:init(options)
 	local y = options.y
 	self.layer = options.layer
 	self.teamNumber = options.teamNumber
+	self.collisionEntities = options.collisionEntities
+
+	self.onFloor = true
 
 	self.body = display.newRect(x, y, 25, 30) 
 	self.body:setFillColor(1, 0, 0)
@@ -36,7 +39,13 @@ end
 function person:update()
 
 	local minY = 768 - 120
-	self.body.y = math.min(self.body.y + self.vy, minY)
+	currentCollision = checkCollision(self, self.collisionEntities)
+	if currentCollision then
+		self.body.y = math.min(self.body.y + self.vy, currentCollision.floor.y)
+	else
+		self.body.y = self.body.y + self.vy
+	end
+	
 	self.vy = self.vy + 1
 
 	local maxRight = 1000
@@ -58,6 +67,40 @@ function person:update()
 	end 
 
 	self.body.x = newXLocation
-end 
+end
+
+function getBoundsFromEntity (entity)
+
+	bounds = {}
+	bounds.x = entity.body.x - (entity.body.width / 2)
+	bounds.y = entity.body.y - (entity.body.height / 2)
+	bounds.width = entity.body.width
+	bounds.height = entity.body.height
+
+	return bounds
+
+end
+
+function checkCollision (entity, entities)
+
+	local entityBounds = getBoundsFromEntity(entity)
+
+	for k, v in pairs(entities) do
+
+		local compareBounds = getBoundsFromEntity(entities[k])
+
+		if (entityBounds.y + 10 > compareBounds.y and entityBounds.y < compareBounds.y + compareBounds.height
+			and entityBounds.x > compareBounds.x
+			and entityBounds.x + entityBounds.width < compareBounds.x + compareBounds.width) then
+
+			return entities[k]
+
+		end
+
+	end
+
+	return nil
+
+end
 
 return person

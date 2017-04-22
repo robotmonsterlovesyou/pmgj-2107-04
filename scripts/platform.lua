@@ -15,7 +15,8 @@ function platform:init(options)
 
 	local platformType = platformTypeSingle --options.platformType
 
-	self.floor = display.newRect(x, y, width, height) 
+	self.floor = display.newRect(x, y, width, height)
+	self.body = self.floor
 	self.layer:insert(self.floor)
 
 end
