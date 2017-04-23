@@ -25,7 +25,7 @@ function board:init(options)
 
 		self.bluePlayer = Person:create({
 			layer = self.personLayer,
-			x = 50, y = 768 - 120,
+			x = 1024-50, y = 768 - 120,
 			teamNumber = 2,
 			collisionEntities = self.entities
 		})
