@@ -158,10 +158,12 @@ end
 
 function person:takeItem(item)
 	self.item = item
+	self.item.owner = self
 	self.item.held = true
 	self.item.body.x = 0
 	self.item.body.y = 0
 	self.body:insert(self.item.body)
+	self.item:setupHold()
 end 
 
 function person:useItem()
@@ -178,6 +180,8 @@ function person:useItem()
 	timer.performWithDelay(1000, function()
 		self:dropItem()
 		self.frozen = false
+		self.guy:setSequence( "run" )
+		self.guy:play()
 	end)
 end 
 
@@ -187,6 +191,7 @@ function person:dropItem()
 		self.item.body.x = math.random(1024 - 200) + 100
 		self.item.body.y = math.random(568) + 100
 		self.item.layer:insert(self.item.body)
+		self.item.owner = nil
 		self.item = nil
 	end
 end
@@ -274,7 +279,11 @@ function person:handleUserAction(event)
 			if context.item then
 				self.itemDelay = timer.performWithDelay(200, function()
 					if context.item then
-						transition.to(context.item.body, {time=350, rotation=360, tag=context.teamNumber .. "itemRotation", onComplete=function()
+						local rotationTarget = 360
+						if self.vx < 0 then
+							rotationTarget = -360
+						end
+						transition.to(context.item.body, {time=450, rotation=rotationTarget, tag=context.teamNumber .. "itemRotation", onComplete=function()
 							if context.item then 
 								context.item.body.rotation=0
 							end 
