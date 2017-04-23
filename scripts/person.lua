@@ -69,6 +69,9 @@ function person:init(options)
 		addFrame(84, 83)
 		addFrame(80, 86)
 
+
+		addFrame(80, 86)
+
 		local sheet = graphics.newImageSheet( "images/players/Redguy.png", options )
 		if self.teamNumber == 2 then
 			sheet = graphics.newImageSheet( "images/players/Blueguy.png", options )
@@ -76,7 +79,7 @@ function person:init(options)
 
 		local sequenceData = {
 			{ name = "run", 
-			frames= { 1, 2, 3, 4, 5 },
+			frames= { 1, 2, 3, 4, 5},
 			time=350, loopCount=0 },
 
 			{ name = "jump", 
@@ -122,6 +125,7 @@ function person:init(options)
 	self.againstFloor = true
 	self.jumping = false
 	self.frozen = false
+	self.backVx = 0
 
 	if self.teamNumber == 2 then
 		self.guy.xScale = self.guy.xScale * -1
@@ -152,7 +156,9 @@ function person:useItem()
 	self.guy:play()
 	
 	transition.pause(self.teamNumber .. "itemRotation")
-	timer.cancel(self.itemDelay)
+	if self.itemDelay then
+		timer.cancel(self.itemDelay)
+	end
 	self.item.body.rotation = 0
 
 	timer.performWithDelay(1000, function()
@@ -173,7 +179,12 @@ end
 
 function person:bePunched()
 	self:dropItem()
-
+	if self.vx > 0 then 
+		self.backVx = -10
+	else 
+		self.backVx = 10
+	end
+	self.vy = -10
 	-- self.frozen = true
 	-- self.guy:setSequence( "stand" )
 	-- self.guy:play()
@@ -182,10 +193,14 @@ end
 
 function person:punch()
 	self.target:bePunched()
-
 end
 
 function person:setPunchTarget(persons)
+
+	-- override size for bigger punch overlap
+	local guyWidth = 50
+	local guyHeight = 50
+
 	local newTarget
 	for i, person in ipairs(persons) do
 		if person ~= self then
@@ -202,6 +217,8 @@ function person:setPunchTarget(persons)
 end
 
 function person:handleUserAction(event)
+	if self.backVx ~= 0 then return end
+
 	if event.phase == "began" and event.teamNumber == self.teamNumber then
 
 		------------ punch!
@@ -262,6 +279,7 @@ function person:update()
 		self.vy = 0
 		if self.againstFloor == false then 
 			self.againstFloor = true
+			self.backVx = 0
 			self.guy:setSequence( "run" )
 			self.guy:play()
 			if isSuperheroLanding then
@@ -274,21 +292,42 @@ function person:update()
 		self.againstFloor = false
 	end 
 
-	local newXLocation
-	if self.vx > 0 then 
-		-- moving right
-		newXLocation = math.min(self.body.x + self.vx, maxRight)
-		if newXLocation == maxRight then
-			self.againstWall = true
+	if self.backVx ~= 0 then
+		if self.backVx > 0 then 
+			self.body.x = math.min(self.body.x + self.backVx, maxRight)
+		else 
+			self.body.x = math.max(self.body.x + self.backVx, maxLeft)
 		end 
-	else 
-		-- moving left
-		newXLocation = math.max(self.body.x + self.vx, maxLeft)
-		if newXLocation == maxLeft then
-			self.againstWall = true
+
+		if math.abs(self.backVx) < 1 then
+			self.backVx = 0 
+		else 
+			self.backVx = self.backVx * 0.95
+		end
+
+	else
+		local newXLocation	
+		if self.vx > 0 then 
+			-- moving right
+			newXLocation = math.min(self.body.x + self.vx, maxRight)
+			if newXLocation == maxRight then
+				self.againstWall = true
+			end 
+		else 
+			-- moving left
+			newXLocation = math.max(self.body.x + self.vx, maxLeft)
+			if newXLocation == maxLeft then
+				self.againstWall = true
+			end 
 		end 
+		self.body.x = newXLocation
+
+		if self.againstWall and self.againstFloor then
+			self.vx = self.vx * -1
+			self.againstWall = false 
+			self.guy.xScale = self.guy.xScale * -1
+		end
 	end 
-	self.body.x = newXLocation
 end
 
 function person:setMinY(platforms)

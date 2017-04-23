@@ -14,6 +14,7 @@ function zone:init(options)
 	self.width = zoneWidth
 	self.height = zoneHeight
 	self.zoneState = options.zoneState or zoneStateNormal
+	self.artPieceIndex = options.artPieceIndex
 	
 	self.body = display.newGroup()
 	self.layer:insert(self.body)
@@ -28,6 +29,24 @@ function zone:init(options)
 	self.box.strokeWidth = 2
 	self.body:insert(self.box)
 	self.body:insert(self.letter)
+	self.box.isVisible = false
+
+	local artWidth = {} 
+	artWidth[1] = 100
+	artWidth[2] = 81
+	artWidth[3] = 100
+	artWidth[4] = 100
+
+	local artHeight = {}
+	artHeight[1] = 78
+	artHeight[2] = 100
+	artHeight[3] = 100
+	artHeight[4] = 75
+
+	local i = display.newImageRect("images/art/art-piece-" .. self.artPieceIndex .. ".png", 
+		artWidth[self.artPieceIndex], artHeight[self.artPieceIndex])
+
+	self.body:insert(i)
 
 	self.updateTimer = timer.performWithDelay(10, function() 
 		self:update()
@@ -66,13 +85,6 @@ function zone:checkCollisions(persons)
 						self.zoneState = zoneStateNormal
 						person:useItem()
 				end 
-
-			-- 	person:takeItem(self)
-			-- 	self.owner = person
-			-- else 
-			-- 	person:dropItem(self.layer)
-			-- 	person:takeItem(self)
-			-- 	self.owner = person
 			end
 		end 
 	end 

@@ -34,20 +34,29 @@ function scene:createScene( event )
 		audio.setVolume(0)
 	end
 
+-- if self.shakeValue > 0 then
+-- self.body.x = self.baseX + math.random(self.shakeValue) - self.shakeValue/2
+-- self.body.y = self.baseY + math.random(self.shakeValue) - self.shakeValue/2
+-- self.shakeValue = self.shakeValue - 1
+-- else
+-- self.body.x = self.baseX
+
 	function addLayer(group, layerName)
 		local layer = display.newGroup()
 		group:insert(layer)
 		self[layerName] = layer
 	end
 
-	addLayer(self.view, "layerBackground")
-	addLayer(self.view, "layerTurnIndicators")
-	addLayer(self.view, "layerTiles")
-	addLayer(self.view, "layerBorder")
-	addLayer(self.view, "layerBoard")
-	addLayer(self.view, "layerStart")
-	addLayer(self.view, "layerButtons")
-	addLayer(self.view, "layerShipMenu")
+	addLayer(self.view, "layerShake")
+
+	addLayer(self.layerShake, "layerBackground")
+	addLayer(self.layerShake, "layerTurnIndicators")
+	addLayer(self.layerShake, "layerTiles")
+	addLayer(self.layerShake, "layerBorder")
+	addLayer(self.layerShake, "layerBoard")
+	addLayer(self.layerShake, "layerStart")
+	addLayer(self.layerShake, "layerButtons")
+	addLayer(self.layerShake, "layerShipMenu")
 
     ActionButton:create({
     	layer = self.layerButtons,

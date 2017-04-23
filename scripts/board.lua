@@ -81,21 +81,22 @@ function board:init(options)
 	function createZones()
 		self.zones = {};
 
-		function createZone(x, y, itemType)
+		function createZone(x, y, artPieceIndex)
 			table.insert(self.zones, Zone:create({
 				layer = self.itemLayer,
-				x = x, y = y
+				x = x, y = y,
+				artPieceIndex = artPieceIndex
 			}))
 		end 
 
-		createZone(200, 300)
-		createZone(1024-200, 300)
+		createZone(200, 300, 1)
+		createZone(1024-200, 300, 2)
 
-		createZone(200, 510)
-		createZone(1024-200, 510)
+		createZone(200, 510, 3)
+		createZone(1024-200, 510, 4)
 
-		createZone(1024/2, 410)
-		createZone(1024/2, 610)
+		createZone(1024/2, 410, 1)
+		createZone(1024/2, 610, 2)
 	end
 
 	createPlatforms()
@@ -103,7 +104,7 @@ function board:init(options)
 	createItems()
 	createZones()
 
-	self.updateTimer = timer.performWithDelay(10, function() 
+	self.updateTimer = timer.performWithDelay(20, function() 
 		self:update()
 	end, 0)
 end
