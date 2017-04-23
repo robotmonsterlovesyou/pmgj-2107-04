@@ -96,8 +96,8 @@ function board:init(options)
 		createZone(200, 510, 3, 2)
 		createZone(1024-200, 510, 4)
 
-		createZone(1024/2, 410, 5)
-		createZone(1024/2, 610, 6, 2)
+		createZone(1024/2, 380, 5)
+		createZone(1024/2, 580, 6, 2)
 	end
 
 	createPlatforms()
