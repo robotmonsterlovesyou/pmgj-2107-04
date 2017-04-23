@@ -11,6 +11,7 @@ function person:init(options)
 	self.teamNumber = options.teamNumber
 	self.collisionEntities = options.collisionEntities
 
+	self.sfxPunch = audio.loadSound("audio/sfx_attack_slap.wav")
 	self.sfxJumpPlayer1 = audio.loadSound("audio/sfx_player1_jump.wav")
 	self.sfxJumpPlayer2 = audio.loadSound("audio/sfx_player2_jump.wav")
 	self.sfxSuperheroLanding = audio.loadSound("audio/sfx_attack_slam.wav")
@@ -22,55 +23,60 @@ function person:init(options)
 	self.minY = 768 - 120;
 
 	function addGuySpriteSheet()
-		local options =
-		{
-		    frames = {},
-		    sheetContentWidth=2176, sheetContentHeight=139
-		}
 
-		local currentX = 0
-		function addFrame(xDistanceFromLast, width)
-			local newX = currentX + xDistanceFromLast
-			table.insert(options.frames, {
-				x = newX,
-				y = 0,
-				width = width or 94,
-				height = 139
-			})
-			currentX = newX
-		end 
+		local options = {width = 100, height = 139, sheetContentWidth=2500, sheetContentHeight=139, numFrames = 25}
 
-		addFrame(20)
-		addFrame(93, 87)
-		addFrame(93)
+		-- local options =
+		-- {
+		--     frames = {
 
-		addFrame(90)
-		addFrame(90)
+		--     },
+		--     sheetContentWidth=2176, sheetContentHeight=139
+		-- }
 
-		-- jump
-		addFrame(90)
-		addFrame(85)
-		addFrame(85)
-		addFrame(90)
-		addFrame(110)
-		addFrame(110)
-		addFrame(100)
-		addFrame(94)
-		addFrame(92)
-		addFrame(100)
-		addFrame(100)
-		addFrame(95)
-		addFrame(88)
+		-- local currentX = 0
+		-- function addFrame(xDistanceFromLast, width)
+		-- 	local newX = currentX + xDistanceFromLast
+		-- 	table.insert(options.frames, {
+		-- 		x = newX,
+		-- 		y = 0,
+		-- 		width = width or 94,
+		-- 		height = 139
+		-- 	})
+		-- 	currentX = newX
+		-- end 
+
+		-- addFrame(20)
+		-- addFrame(93, 87)
+		-- addFrame(93)
+
+		-- addFrame(90)
+		-- addFrame(90)
+
+		-- -- jump
+		-- addFrame(90)
+		-- addFrame(85)
+		-- addFrame(85)
+		-- addFrame(90)
+		-- addFrame(110)
+		-- addFrame(110)
+		-- addFrame(100)
+		-- addFrame(94)
+		-- addFrame(92)
+		-- addFrame(100)
+		-- addFrame(100)
+		-- addFrame(95)
+		-- addFrame(88)
 		
-		-- first surprise appears
-		addFrame(87)
-		addFrame(90)
-		addFrame(86, 90)
-		addFrame(84, 83)
-		addFrame(80, 86)
+		-- -- first surprise appears
+		-- addFrame(87)
+		-- addFrame(90)
+		-- addFrame(86, 90)
+		-- addFrame(84, 83)
+		-- addFrame(80, 86)
 
 
-		addFrame(80, 86)
+		-- addFrame(80, 86)
 
 		local sheet = graphics.newImageSheet( "images/players/Redguy.png", options )
 		if self.teamNumber == 2 then
@@ -89,6 +95,14 @@ function person:init(options)
 			{ name = "stand", 
 			frames= { 3, 23 },
 			time=500, loopCount=0 },
+
+			{ name = "punch", 
+			frames= { 25, 25 },
+			time=100, loopCount=1 },
+
+			{ name = "bePunched", 
+			frames= { 19, 20, 21, 22 },
+			time=100, loopCount=1 },
 
 			-- { name = "jump", 
 			-- frames= { 9, 10, 11, 12 }, 
@@ -189,10 +203,21 @@ function person:bePunched()
 	-- self.guy:setSequence( "stand" )
 	-- self.guy:play()
 
+	self.guy:setSequence( "bePunched" )
+	self.guy:play()
 end 
 
 function person:punch()
 	self.target:bePunched()
+	audio.play(self.sfxPunch)
+
+	self.guy:setSequence( "punch" )
+	self.guy:play()
+
+	timer.performWithDelay(100, function()
+		self.guy:setSequence( "run" )
+		self.guy:play()
+	end)
 end
 
 function person:setPunchTarget(persons)
