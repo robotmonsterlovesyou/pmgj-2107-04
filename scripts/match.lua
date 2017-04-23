@@ -228,10 +228,10 @@ function scene:reset(event)
 		timer.resume(self.updateSecondsTimer)
 		self.board.zones[1].zoneState = 1
 		self.board.zones[2].zoneState = 2
-		self.board.zones[3].zoneState = 1
+		self.board.zones[3].zoneState = 2
 		self.board.zones[4].zoneState = 2
 		self.board.zones[5].zoneState = 1
-		self.board.zones[6].zoneState = 2
+		self.board.zones[6].zoneState = 1
 	end 
 end 
 
