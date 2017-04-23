@@ -9,6 +9,7 @@ function person:init(options)
 
 	self.sfxJumpPlayer1 = audio.loadSound("audio/sfx_player1_jump.wav")
 	self.sfxJumpPlayer2 = audio.loadSound("audio/sfx_player2_jump.wav")
+	self.sfxJumpLand = audio.loadSound("audio/sfx_attack_slam.wav")
 
 	self.vx = 6
 	self.vy = 0
@@ -110,7 +111,7 @@ function person:init(options)
 
 	self.onFloor = true
 	self.againstWall = false 
-	self.againstFloor = false
+	self.againstFloor = true
 	self.jumping = false
 
 	if self.teamNumber == 2 then
@@ -164,6 +165,7 @@ function person:update()
 			self.againstFloor = true
 			self.guy:setSequence( "run" )
 			self.guy:play()
+			audio.play(self.sfxJumpLand);
 		end 
 	else
 		self.againstFloor = false
