@@ -223,6 +223,7 @@ function scene:reset(event)
 		self.blueVictory.alpha = 0
 		self.redVictory.alpha = 0
 		self.secondsRemaining = 120
+		timer.resume(self.updateSecondsTimer)
 	end 
 end 
 
