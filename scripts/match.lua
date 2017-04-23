@@ -170,7 +170,7 @@ function scene:update()
 	local progressWidth = 255
 	local onFirePercent = 50
 	self.backgroundMostFire.alpha = onFirePercent / 100
-	self.progress.x = (progressWidth * 2 / (onFirePercent + 1)) - progressWidth
+	self.progress.x = ((progressWidth * 2) * (onFirePercent / 100)) - progressWidth
 end
 
 -- Called when scene is about to move offscreen:
