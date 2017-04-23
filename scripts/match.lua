@@ -254,6 +254,12 @@ function scene:update()
 
 	if self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
 		print("end game " .. onFirePercent)
+
+		if onFirePercent == 100 then
+			self:showVictory(1)
+		else
+			self:showVictory(2)
+		end
 	end
 
 end
