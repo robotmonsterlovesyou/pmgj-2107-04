@@ -10,7 +10,7 @@ function person:init(options)
 	self.sfxJumpPlayer1 = audio.loadSound("audio/sfx_player1_jump.wav")
 	self.sfxJumpPlayer2 = audio.loadSound("audio/sfx_player2_jump.wav")
 	self.sfxSuperheroLanding = audio.loadSound("audio/sfx_attack_slam.wav")
-	self.sfxJumpLand = audio.loadSound("audio/sfx_attack_slam.wav")
+	self.sfxJumpLand = audio.loadSound("audio/sfx_player_landing.wav")
 
 	self.vx = 6
 	self.vy = 0
