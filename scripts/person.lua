@@ -162,7 +162,7 @@ function person:update()
 			
 	if self.body.y == self.minY then
 		local isSuperheroLanding = false
-		if self.vy > 15 then
+		if self.vy > 25 then
 			isSuperheroLanding = true
 		end
 		self.vy = 0
