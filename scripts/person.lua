@@ -8,7 +8,7 @@ function person:init(options)
 	self.collisionEntities = options.collisionEntities
 
 	self.onFloor = true
-
+	self.againstWall = false 
 	self.againstFloor = false
 
 	self.body = display.newRect(x, y, 25, 30) 
@@ -33,14 +33,16 @@ function person:init(options)
 		end 
 	end 
 
-	self.againstWall = false 
-
 	Runtime:addEventListener("actionPressed", self.actionPressedListener)
 end 
 
 function person:update()
+	local floorY = 768 - 120
+	local maxRight = 1000
+	local maxLeft = 24
 
-	local minY = 768 - 120
+	local minY = floorY
+
 	currentCollision = checkCollision(self, self.collisionEntities)
 	if currentCollision then
 		self.body.y = math.min(self.body.y + self.vy, getBoundsFromEntity(currentCollision).y)
@@ -52,9 +54,6 @@ function person:update()
 		self.vy = self.vy + 1
 		self.body.y = self.body.y + self.vy
 	end
-
-	local maxRight = 1000
-	local maxLeft = 24
 
 	local newXLocation
 	if self.vx > 0 then 
@@ -70,9 +69,12 @@ function person:update()
 			self.againstWall = true
 		end 
 	end 
-
 	self.body.x = newXLocation
 end
+
+function setMinY(platforms)
+
+end 
 
 function getBoundsFromEntity (entity)
 
@@ -81,6 +83,7 @@ function getBoundsFromEntity (entity)
 	bounds.y = entity.body.y - (entity.body.height / 2)
 	bounds.width = entity.body.width
 	bounds.height = entity.body.height
+
 
 	return bounds
 

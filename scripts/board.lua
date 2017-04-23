@@ -4,7 +4,6 @@ local Person = require "scripts.person"
 board = inheritsFrom( nil )
 
 function board:init(options)
-	self.entities = {};
 	self.boardLayer = options.layer
 
 	self.platformLayer = display.newGroup()
@@ -13,54 +12,62 @@ function board:init(options)
 	self.personLayer = display.newGroup()
 	self.boardLayer:insert(self.personLayer)
 
-	Person:create({
-		layer = self.personLayer,
-		x = 50, y = 768 - 120,
-		teamNumber = 1,
-		collisionEntities = self.entities
-	})
+	function createPersons()
+		self.persons = {};
 
- 	-- left platform
-	self.entities[0] = Platform:create({
-		layer = self.platformLayer,
-		x = 270, y = 768 - 200,
-		width = 300, height = 15
-	})
+		self.redPlayer = Person:create({
+			layer = self.personLayer,
+			x = 50, y = 768 - 120,
+			teamNumber = 1,
+			collisionEntities = self.entities
+		})
+		table.insert(self.persons, self.redPlayer)
 
-	-- right platform 
-	self.entities[1] = Platform:create({
-		layer = self.platformLayer,
-		x = 1024-270, y = 768 - 200,
-		width = 300, height = 15
-	})
+		self.bluePlayer = Person:create({
+			layer = self.personLayer,
+			x = 50, y = 768 - 120,
+			teamNumber = 2,
+			collisionEntities = self.entities
+		})
+		table.insert(self.persons, self.bluePlayer)
+	end 
 
- 	-- left platform
-	self.entities[2] = Platform:create({
-		layer = self.platformLayer,
-		x = 270, y = 768 - 400,
-		width = 300, height = 15
-	})
+	function createPlatforms()
+		self.entities = {};
 
-	-- right platform 
-	self.entities[3] = Platform:create({
-		layer = self.platformLayer,
-		x = 1024-270, y = 768 - 400,
-		width = 300, height = 15
-	})
+		function createPlatform(x, y, w, h)
+			table.insert(self.entities, Platform:create({
+				layer = self.platformLayer,
+				x = x, y = y,
+				width = w, height = h
+			}))
+		end 
 
-	-- center platform
-	self.entities[4] = Platform:create({
-		layer = self.platformLayer,
-		x = 1024/2, y = 768 - 300,
-		width = 300, height = 15
-	})
- 	
-	-- floor
-	self.entities[5] = Platform:create({
-		layer = self.platformLayer,
-		x = 1024/2, y = 768-90,
-		width = 1024, height = 30
-	})
+
+		createPlatform(270, 768 - 400, 300, 15)
+		createPlatform(1024-270, 768 - 400, 300, 15)
+		
+		createPlatform(1024/2, 768 - 300, 300, 15)
+		
+		createPlatform(270, 768-200, 300, 15)
+		createPlatform(1024-270, 768-200, 300, 15)
+		
+		-- floor
+		createPlatform(1024/2, 768-90, 1024, 30)
+	end
+
+	createPlatforms()
+	createPersons()
+
+	self.updateTimer = timer.performWithDelay(10, function() 
+		self:update()
+	end, 0)
 end
+
+function board:update()
+	-- for i, person in ipairs(self.persons) do
+	-- 	person:setMinY(self.entities)
+	-- end
+end 
 
 return board
