@@ -10,6 +10,8 @@ function person:init(options)
 	self.vx = 6
 	self.vy = 0
 
+	self.minY = 768 - 120;
+
 	function addGuySpriteSheet()
 		local options =
 		{
@@ -62,7 +64,7 @@ function person:init(options)
 		local sequenceData = {
 			{ name = "run", 
 			frames= { 1, 2, 3, 4, 5 },
-			time=400, loopCount=0 },
+			time=350, loopCount=0 },
 
 			{ name = "jump", 
 			frames= { 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18},
@@ -83,8 +85,8 @@ function person:init(options)
 		self.guy = display.newSprite( sheet, sequenceData )
 		self.guy.x = 200
 		self.guy.y = 200
-		self.guy.xScale = 0.65
-		self.guy.yScale = 0.65
+		self.guy.xScale = 0.70
+		self.guy.yScale = 0.70
 
 		self.guy:setSequence( "run" )
 		self.guy:play()
@@ -130,25 +132,23 @@ function person:handleUserAction(event)
 end
 
 function person:update()
-	local floorY = 768 - 120
 	local maxRight = 1000
 	local maxLeft = 24
 
-	local minY = floorY
-
-	currentCollision = checkCollision(self, self.collisionEntities)
-	if currentCollision then
-		self.body.y = math.min(self.body.y + self.vy, getBoundsFromEntity(currentCollision).y)
-		if self.againstFloor == false then
-			self.guy:setSequence( "run" )
-			self.guy:play()
+	-- gravity
+	self.vy = self.vy + 1
+	self.body.y = math.min(self.body.y + self.vy, self.minY)
+			
+	if self.body.y == self.minY then 
+		if self.againstFloor == false then 
 			self.againstFloor = true
 			self.vy = 0
-		end
+			self.guy:setSequence( "run" )
+			self.guy:play()
+		end 
 	else
-		self.vy = self.vy + 1
-		self.body.y = self.body.y + self.vy
-	end
+		self.againstFloor = false
+	end 
 
 	local newXLocation
 	if self.vx > 0 then 
@@ -168,33 +168,36 @@ function person:update()
 end
 
 function person:setMinY(platforms)
-	local guyX = self.body.x
-	local guyWidth = 30
+	local latestMinY = 768 - 120
 
-	local floorY = 768 - 120
-	local minY = floorY
+	local guyX = self.body.x
+	local guyY = self.body.y
+	local guyWidth = 30
+	local guyHeight = 30
 
 	for k, platform in pairs(platforms) do
 		local platformBounds = getBoundsFromEntity(platform)
+		platform.body:setFillColor(255, 255, 255)
 
-		if (guyX < platformBounds.x + platformBounds.width and
-			guyX + guyWidth > platformBounds.x) then
+		if (guyY <= platformBounds.y and
+			platformBounds.x - platformBounds.width/2 < guyX and
+			platformBounds.x + platformBounds.width/2 > guyX) then
 
-			local platformY = platformBounds.y
-			if platformY < minY then
-				minY = platformY
-			end 
+			if (platformBounds.y <= latestMinY) then
+				latestMinY = platformBounds.y
+				platform.body:setFillColor(0, 255, 0)
+			end
 		end
 	end
 
-	self.minY = minY
-	print(minY)
+	self.minY = latestMinY
+	print(self.minY)
 end 
 
 function getBoundsFromEntity (entity)
 	bounds = {}
-	bounds.x = entity.body.x - (entity.body.width / 2)
-	bounds.y = entity.body.y - (entity.body.height / 2)
+	bounds.x = entity.body.x
+	bounds.y = entity.body.y
 	bounds.width = entity.body.width
 	bounds.height = entity.body.height
 	return bounds
