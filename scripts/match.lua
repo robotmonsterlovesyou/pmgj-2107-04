@@ -168,7 +168,16 @@ end
 function scene:update()
 	-- self.background:update()
 	local progressWidth = 255
-	local onFirePercent = 50
+	local onFirePercent = 0
+	local zonesCount = 0
+	local zonesOnFire = 0
+	for i, zone in ipairs(self.board.zones) do
+		zonesCount = zonesCount + 1
+		if zone.zoneState == 2 then
+			zonesOnFire = zonesOnFire + 1
+		end
+	end
+	onFirePercent = zonesOnFire / zonesCount * 100
 	self.backgroundMostFire.alpha = onFirePercent / 100
 	self.progress.x = ((progressWidth * 2) * (onFirePercent / 100)) - progressWidth
 end
