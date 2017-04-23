@@ -17,8 +17,12 @@ function item:init(options)
 	self.height = itemHeight
 	self.itemType = options.itemType
 	
+	self.shakeLayer = display.newGroup()
+	self.layer:insert(self.shakeLayer)
+
 	self.body = display.newGroup()
-	self.layer:insert(self.body)
+	self.shakeLayer:insert(self.body)
+
 	self.body.x = x
 	self.body.y = y
 
@@ -45,6 +49,14 @@ function item:init(options)
 end
 
 function item:update()
+
+	-- self.angle = self.angle + 10
+ --    if self.angle > 360 then self.angle = self.angle - 360 end
+
+ --    local radAngle = (self.angle) * (math.pi / 180); 
+ --    local rotatedX = math.cos(radAngle) * (self.pointX);
+ --    self.shipSpriteLayer.x = rotatedX
+
 	-- if self.held then
 	-- 	self.body.x = self.owner.body.x
 	-- 	self.body.y = self.owner.body.y
@@ -64,7 +76,7 @@ function item:checkCollisions(persons)
 				person:takeItem(self)
 				self.owner = person
 			else 
-				person:dropItem(self.layer)
+				person:dropItem()
 				person:takeItem(self)
 				self.owner = person
 			end

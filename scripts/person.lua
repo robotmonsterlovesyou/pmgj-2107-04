@@ -139,11 +139,11 @@ function person:takeItem(item)
 	self.body:insert(self.item.body)
 end 
 
-function person:dropItem(stageLayer)
+function person:dropItem()
 	self.item.held = false
 	self.item.body.x = math.random(1024 - 200) + 100
 	self.item.body.y = math.random(568) + 100
-	stageLayer:insert(self.item.body)
+	self.item.layer:insert(self.item.body)
 	self.item = nil
 end
 
@@ -161,11 +161,16 @@ function person:handleUserAction(event)
 		self.againstFloor = false
 		self.jumping = true
 
-		if self.item then
+		local context = self
+		if context.item then
 			timer.performWithDelay(200, function()
-				transition.to(self.item.body, {time=350, rotation=360, onComplete=function()
-					self.item.body.rotation=0
-				end})
+				if context.item then
+					transition.to(context.item.body, {time=350, rotation=360, onComplete=function()
+						if context.item then 
+							context.item.body.rotation=0
+						end 
+					end})
+				end
 			end)
 		end 
 	end 

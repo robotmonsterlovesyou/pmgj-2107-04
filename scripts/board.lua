@@ -111,6 +111,10 @@ function board:update()
 		item:checkCollisions(self.persons)
 	end
 
+	for i, zone in ipairs(self.zones) do
+		zone:checkCollisions(self.persons)
+	end
+
 end 
 
 return board
