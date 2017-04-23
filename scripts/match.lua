@@ -60,6 +60,7 @@ function scene:createScene( event )
 	addLayer(self.layerShake, "layerStart")
 	addLayer(self.layerShake, "layerButtons")
 	addLayer(self.layerShake, "layerShipMenu")
+	addLayer(self.layerShake, "layerVictory")
 
     ActionButton:create({
     	layer = self.layerButtons,
@@ -122,11 +123,19 @@ function scene:createScene( event )
 		end
 
 		Runtime:addEventListener("rematch", self.rematchListener)
+
+		------- R E M A T C H -- L I S T E N E R --
+		self.victoryListener = function(event)
+			self:showVictory(event.teamNumber)
+		end
+
+		Runtime:addEventListener("victory", self.victoryListener)
 	end
 
 	addListeners()
 	
 end
+
 
 -- Called immediately after scene has moved onscreen:
 -- (e.g. start timers, load audio, start listeners, etc.)
@@ -166,7 +175,47 @@ function scene:enterScene( event )
 	self.updateTimer = timer.performWithDelay(100, function() 
 		self:update()
 	end, 0)
+
+	self.redVictory = display.newImageRect("images/victory/red-winner.png", 1024, 768)
+	self.redVictory.anchorX = 0
+	self.redVictory.anchorY = 0
+	self.redVictory.alpha = 0
+	self.redVictory:addEventListener( "touch", function(event)
+		self:reset(event)
+	end)
+
+	self.blueVictory = display.newImageRect("images/victory/blue-winner.png", 1024, 768)
+	self.blueVictory.anchorX = 0
+	self.blueVictory.anchorY = 0
+	self.blueVictory.alpha = 0
+	self.blueVictory:addEventListener( "touch", function(event)
+		self:reset(event)
+	end)
+
+	self.layerVictory:insert(self.redVictory)
+	self.layerVictory:insert(self.blueVictory)
+	self.victoryOn = false
 end
+
+function scene:reset(event)
+	print("reset")
+	if event.phase == "began" then 
+		self.victoryOn = false
+		self.blueVictory.alpha = 0
+		self.redVictory.alpha = 0
+
+	end 
+end 
+
+function scene:showVictory(teamNumber)
+	self.victoryOn = true
+	print(teamNumber .. " won!")
+	if teamNumber == 1 then
+		transition.to(self.redVictory, {time=1000, alpha=1})
+	else 
+		transition.to(self.blueVictory, {time=1000, alpha=1})
+	end 
+end 
 
 function scene:update()
 	-- self.background:update()
