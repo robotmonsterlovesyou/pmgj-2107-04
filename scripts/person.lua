@@ -162,11 +162,13 @@ function person:useItem()
 end 
 
 function person:dropItem()
-	self.item.held = false
-	self.item.body.x = math.random(1024 - 200) + 100
-	self.item.body.y = math.random(568) + 100
-	self.item.layer:insert(self.item.body)
-	self.item = nil
+	if self.item then
+		self.item.held = false
+		self.item.body.x = math.random(1024 - 200) + 100
+		self.item.body.y = math.random(568) + 100
+		self.item.layer:insert(self.item.body)
+		self.item = nil
+	end
 end
 
 function person:bePunched()
