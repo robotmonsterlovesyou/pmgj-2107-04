@@ -222,7 +222,7 @@ function scene:reset(event)
 		self.victoryOn = false
 		self.blueVictory.alpha = 0
 		self.redVictory.alpha = 0
-
+		self.secondsRemaining = 120
 	end 
 end 
 
@@ -254,6 +254,7 @@ function scene:update()
 	self.secondsRemainingTextLabel.text = math.floor(self.secondsRemaining / 60) .. ":" .. (self.secondsRemaining- math.floor(self.secondsRemaining / 60) * 60)
 
 	if self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
+		timer.pause(self.updateSecondsTimer)
 		print("end game " .. onFirePercent)
 
 		if onFirePercent == 100 then
