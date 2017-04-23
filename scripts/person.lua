@@ -1,5 +1,8 @@
 person = inheritsFrom( nil )
 
+guyWidth = 30
+guyHeight = 30
+
 function person:init(options)
 	local x = options.x
 	local y = options.y
@@ -88,8 +91,8 @@ function person:init(options)
 
 		self.guy = display.newSprite( sheet, sequenceData )
 
-		self.guy.x = x
-		self.guy.y = y
+		self.guy.x = 0
+		self.guy.y = 0
 		self.guy.xScale = 0.70
 		self.guy.yScale = 0.70
 
@@ -99,8 +102,11 @@ function person:init(options)
 
 	addGuySpriteSheet()
 
-	self.body = self.guy
+	self.body = display.newGroup()
+	self.body:insert(self.guy)
 	self.layer:insert(self.body)
+	self.body.x = x
+	self.body.y = y
 	-- self.body = display.newRect(x, y, 25, 30) 
 	-- self.body:setFillColor(1, 0, 0)
 	-- self.layer:insert(self.body)
@@ -125,19 +131,43 @@ function person:init(options)
 	end, 0)
 end 
 
+function person:takeItem(item)
+	self.item = item
+	self.item.held = true
+	self.item.body.x = 0
+	self.item.body.y = 0
+	self.body:insert(self.item.body)
+end 
+
+function person:dropItem(stageLayer)
+	self.item.held = false
+	self.item.body.x = math.random(1024 - 200) + 100
+	self.item.body.y = math.random(568) + 100
+	stageLayer:insert(self.item.body)
+	self.item = nil
+end
+
 function person:handleUserAction(event)
 	if event.phase == "began" and event.teamNumber == self.teamNumber then
 		if self.againstWall then
 			self.vx = self.vx * -1
 			self.againstWall = false 
-			self.body.xScale = self.body.xScale * -1
+			self.guy.xScale = self.guy.xScale * -1
 		end 
 			
 		self.vy = -16
-		self.body:setSequence("jump")
-		self.body:play()
+		self.guy:setSequence("jump")
+		self.guy:play()
 		self.againstFloor = false
 		self.jumping = true
+
+		if self.item then
+			timer.performWithDelay(200, function()
+				transition.to(self.item.body, {time=350, rotation=360, onComplete=function()
+					self.item.body.rotation=0
+				end})
+			end)
+		end 
 	end 
 end
 
@@ -182,8 +212,6 @@ function person:setMinY(platforms)
 
 	local guyX = self.body.x
 	local guyY = self.body.y
-	local guyWidth = 30
-	local guyHeight = 30
 
 	for k, platform in pairs(platforms) do
 		local platformBounds = getBoundsFromEntity(platform)
@@ -201,7 +229,6 @@ function person:setMinY(platforms)
 	end
 
 	self.minY = latestMinY
-	print(self.minY)
 end 
 
 function getBoundsFromEntity (entity)
