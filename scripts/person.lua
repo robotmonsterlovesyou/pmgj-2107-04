@@ -9,6 +9,7 @@ function person:init(options)
 
 	self.sfxJumpPlayer1 = audio.loadSound("audio/sfx_player1_jump.wav")
 	self.sfxJumpPlayer2 = audio.loadSound("audio/sfx_player2_jump.wav")
+	self.sfxSuperheroLanding = audio.loadSound("audio/sfx_attack_slam.wav")
 	self.sfxJumpLand = audio.loadSound("audio/sfx_attack_slam.wav")
 
 	self.vx = 6
@@ -159,13 +160,21 @@ function person:update()
 	self.vy = self.vy + 1
 	self.body.y = math.min(self.body.y + self.vy, self.minY)
 			
-	if self.body.y == self.minY then 
+	if self.body.y == self.minY then
+		local isSuperheroLanding = false
+		if self.vy > 15 then
+			isSuperheroLanding = true
+		end
 		self.vy = 0
 		if self.againstFloor == false then 
 			self.againstFloor = true
 			self.guy:setSequence( "run" )
 			self.guy:play()
-			audio.play(self.sfxJumpLand);
+			if isSuperheroLanding then
+				audio.play(self.sfxSuperheroLanding)
+			else
+				audio.play(self.sfxJumpLand)
+			end
 		end 
 	else
 		self.againstFloor = false
