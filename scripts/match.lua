@@ -36,8 +36,8 @@ function scene:createScene( event )
 		audio.setVolume(0)
 	end
 
-	local bgMusic = audio.loadSound("audio/mx_mainsong.mp3")
-	audio.play(bgMusic)
+	self.bgMusic = audio.loadSound("audio/mx_mainsong.mp3")
+	audio.play(self.bgMusic)
 
 -- if self.shakeValue > 0 then
 -- self.body.x = self.baseX + math.random(self.shakeValue) - self.shakeValue/2
@@ -232,6 +232,9 @@ function scene:reset(event)
 		self.board.zones[4].zoneState = 2
 		self.board.zones[5].zoneState = 1
 		self.board.zones[6].zoneState = 1
+		audio.pause(self.bgMusic)
+		audio.rewind(self.bgMusic)
+		audio.play(self.bgMusic)
 	end 
 end 
 
@@ -265,7 +268,7 @@ function scene:update()
 	if self.victoryOn == false and self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
 		timer.pause(self.updateSecondsTimer)
 		print("end game " .. onFirePercent)
-
+		audio.pause(self.bgMusic)
 		if onFirePercent >= 50 then
 			self:showVictory(1)
 		else
