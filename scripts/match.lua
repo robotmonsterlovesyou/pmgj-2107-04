@@ -74,6 +74,8 @@ function scene:createScene( event )
 		x = 1024 - 50,
 		y = 768 - 75})
 
+	self.secondsRemaining = 120
+
 	self.flashCurtain = display.newRect(self.layerStart, 1024/2, 768/2, 1024, 768 )
 	self.flashCurtain:setFillColor( 0.68, 0.85, 0.90 )
 	self.flashCurtain.alpha = 0
@@ -94,6 +96,18 @@ function scene:createScene( event )
 	self.backgroundMostFire.anchorX = 0
 	self.backgroundMostFire.anchorY = 0
 	self.backgroundMostFire.alpha = 0.5
+
+	local secondsRemainingTextLabelOptions = {}
+	secondsRemainingTextLabelOptions.text = self.secondsRemaining
+	secondsRemainingTextLabelOptions.x = 1024/2
+	secondsRemainingTextLabelOptions.y = 670
+	secondsRemainingTextLabelOptions.align = "center"
+
+	self.secondsRemainingTextLabel = display.newText(secondsRemainingTextLabelOptions)
+	self.secondsRemainingTextLabel:setFillColor(0, 0, 0)
+	self.layerBackground:insert(self.secondsRemainingTextLabel)
+	self.secondsRemainingTextLabel.anchorX = 0
+	self.secondsRemainingTextLabel.anchorY = 0
 
 	function addListeners()
 
@@ -195,6 +209,10 @@ function scene:enterScene( event )
 	self.layerVictory:insert(self.redVictory)
 	self.layerVictory:insert(self.blueVictory)
 	self.victoryOn = false
+
+	self.updateSecondsTimer = timer.performWithDelay(1000, function() 
+		self.secondsRemaining = self.secondsRemaining - 1
+	end, 0)
 end
 
 function scene:reset(event)
@@ -232,6 +250,12 @@ function scene:update()
 	onFirePercent = zonesOnFire / zonesCount * 100
 	self.backgroundMostFire.alpha = onFirePercent / 100
 	self.progress.x = ((progressWidth * 2) * (onFirePercent / 100)) - progressWidth
+	self.secondsRemainingTextLabel.text = math.floor(self.secondsRemaining / 60) .. ":" .. (self.secondsRemaining- math.floor(self.secondsRemaining / 60) * 60)
+
+	if self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
+		print("end game " .. onFirePercent)
+	end
+
 end
 
 -- Called when scene is about to move offscreen:
