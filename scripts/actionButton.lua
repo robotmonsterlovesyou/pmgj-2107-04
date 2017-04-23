@@ -9,20 +9,16 @@ function actionButton:init(options)
     self.y = options.y
 
     local buttonColors = {}
-    buttonColors[teamOne] = "blue"
-    buttonColors[teamTwo] = "red"
-    buttonColors[teamThree] = "orange"
-    buttonColors[teamFour] = "purple"
+    buttonColors[teamTwo] = "blue"
+    buttonColors[teamOne] = "red"
     
     local buttonIcons = {}
     buttonIcons[teamOne] = "q_button_jump_ccw"
     buttonIcons[teamTwo] = "q_button_jump_cw"
-    buttonIcons[teamThree] = "q_button_jump_ccw"
-    buttonIcons[teamFour] = "q_button_jump_cw"
     
     local buttonRotation = {}
-    buttonRotation[teamOne] = -180
-    buttonRotation[teamTwo] = -90
+    buttonRotation[teamOne] = -90
+    buttonRotation[teamTwo] = -180
     
     -- Function to handle button events
     local function handleButtonEvent( event )
@@ -51,6 +47,7 @@ function actionButton:init(options)
     button1.x = self.x
     button1.y = self.y
     button1.rotation = buttonRotation[self.teamNumber]
+    button1.alpha=0.01
 
     -- Change the button's label text
     button1:setLabel( "" )

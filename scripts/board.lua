@@ -25,7 +25,7 @@ function board:init(options)
 
 		self.bluePlayer = Person:create({
 			layer = self.personLayer,
-			x = 50, y = 768 - 120,
+			x = 1024-50, y = 768 - 120,
 			teamNumber = 2,
 			collisionEntities = self.entities
 		})
@@ -44,16 +44,16 @@ function board:init(options)
 		end 
 
 
-		createPlatform(270, 768 - 400, 300, 15)
-		createPlatform(1024-270, 768 - 400, 300, 15)
+		createPlatform(260, 768 - 441, 320, 15)
+		createPlatform(1024 - 270, 768 - 441, 320, 15)
 		
-		createPlatform(1024/2, 768 - 300, 300, 15)
+		createPlatform(1024/2, 768 - 331, 320, 15)
 		
-		createPlatform(270, 768-200, 300, 15)
-		createPlatform(1024-270, 768-200, 300, 15)
+		createPlatform(260, 768-231, 320, 15)
+		createPlatform(1024-270, 768-231, 320, 15)
 		
 		-- floor
-		createPlatform(1024/2, 768-90, 1024, 30)
+		createPlatform(1024/2, 768-89, 1024, 30)
 	end
 
 	createPlatforms()

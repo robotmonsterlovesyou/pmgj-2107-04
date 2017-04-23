@@ -19,6 +19,8 @@ function platform:init(options)
 	self.body = self.floor
 	self.layer:insert(self.floor)
 
+	self.floor.alpha=0
+
 end
 
 return platform

@@ -52,18 +52,23 @@ function scene:createScene( event )
     ActionButton:create({
     	layer = self.layerButtons,
 		teamNumber = teamOne, 
-		x = 1024 - 75,
+		x = 75,
 		y = 768 - 75})
 
 	ActionButton:create({
 		layer = self.layerButtons,
 		teamNumber = teamTwo, 
-		x = 75,
+		x = 1024 - 75,
 		y = 768 - 75})
 
 	self.flashCurtain = display.newRect(self.layerStart, 1024/2, 768/2, 1024, 768 )
 	self.flashCurtain:setFillColor( 0.68, 0.85, 0.90 )
 	self.flashCurtain.alpha = 0
+
+	self.background = display.newImageRect("images/background-nofire.png", 1024, 768)
+	self.layerBackground:insert(self.background)
+	self.background.anchorX = 0
+	self.background.anchorY = 0
 
 	function addListeners()
 

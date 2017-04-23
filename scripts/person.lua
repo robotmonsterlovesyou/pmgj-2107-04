@@ -1,7 +1,7 @@
 person = inheritsFrom( nil )
 
 function person:init(options)
-	local x = 600--options.x
+	local x = options.x
 	local y = options.y
 	self.layer = options.layer
 	self.teamNumber = options.teamNumber
@@ -61,6 +61,10 @@ function person:init(options)
 		addFrame(80, 86)
 
 		local sheet = graphics.newImageSheet( "images/players/Redguy.png", options )
+		if self.teamNumber == 2 then
+			sheet = graphics.newImageSheet( "images/players/Blueguy.png", options )
+		end
+
 		local sequenceData = {
 			{ name = "run", 
 			frames= { 1, 2, 3, 4, 5 },
@@ -83,8 +87,9 @@ function person:init(options)
 		}
 
 		self.guy = display.newSprite( sheet, sequenceData )
-		self.guy.x = 200
-		self.guy.y = 200
+
+		self.guy.x = x
+		self.guy.y = y
 		self.guy.xScale = 0.70
 		self.guy.yScale = 0.70
 
@@ -105,6 +110,11 @@ function person:init(options)
 	self.againstFloor = false
 	self.jumping = false
 
+	if self.teamNumber == 2 then
+		self.guy.xScale = self.guy.xScale * -1
+		self.vx = self.vx * -1
+	end
+
 	self.actionPressedListener = function(event)
 		self:handleUserAction(event)
 	end 
@@ -116,14 +126,14 @@ function person:init(options)
 end 
 
 function person:handleUserAction(event)
-	if event.phase == "began" then
+	if event.phase == "began" and event.teamNumber == self.teamNumber then
 		if self.againstWall then
 			self.vx = self.vx * -1
 			self.againstWall = false 
 			self.body.xScale = self.body.xScale * -1
 		end 
 			
-		self.vy = -15
+		self.vy = -16
 		self.body:setSequence("jump")
 		self.body:play()
 		self.againstFloor = false
@@ -140,9 +150,9 @@ function person:update()
 	self.body.y = math.min(self.body.y + self.vy, self.minY)
 			
 	if self.body.y == self.minY then 
+		self.vy = 0
 		if self.againstFloor == false then 
 			self.againstFloor = true
-			self.vy = 0
 			self.guy:setSequence( "run" )
 			self.guy:play()
 		end 
