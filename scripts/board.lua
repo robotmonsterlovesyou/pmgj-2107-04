@@ -65,9 +65,9 @@ function board:init(options)
 end
 
 function board:update()
-	-- for i, person in ipairs(self.persons) do
-	-- 	person:setMinY(self.entities)
-	-- end
+	for i, person in ipairs(self.persons) do
+		person:setMinY(self.entities)
+	end
 end 
 
 return board
