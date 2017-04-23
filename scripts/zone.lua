@@ -37,6 +37,7 @@ function zone:init(options)
 	artWidth[3] = 100
 	artWidth[4] = 100
 	artWidth[5] = 97
+	artWidth[6] = 66
 
 	local artHeight = {}
 	artHeight[1] = 78
@@ -44,6 +45,7 @@ function zone:init(options)
 	artHeight[3] = 100
 	artHeight[4] = 75
 	artHeight[5] = 138
+	artHeight[6] = 184
 
 	local i = display.newImageRect("images/art/art-piece-" .. self.artPieceIndex .. ".png", 
 		artWidth[self.artPieceIndex], artHeight[self.artPieceIndex])
