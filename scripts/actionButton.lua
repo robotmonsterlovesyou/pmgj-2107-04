@@ -9,16 +9,8 @@ function actionButton:init(options)
     self.y = options.y
 
     local buttonColors = {}
-    buttonColors[teamTwo] = "blue"
-    buttonColors[teamOne] = "red"
-    
-    local buttonIcons = {}
-    buttonIcons[teamOne] = "q_button_jump_ccw"
-    buttonIcons[teamTwo] = "q_button_jump_cw"
-    
-    local buttonRotation = {}
-    buttonRotation[teamOne] = -90
-    buttonRotation[teamTwo] = -180
+    buttonColors[teamTwo] = "fire"
+    buttonColors[teamOne] = "water"
     
     -- Function to handle button events
     local function handleButtonEvent( event )
@@ -30,24 +22,40 @@ function actionButton:init(options)
         
         Runtime:dispatchEvent( jumpPressedEvent )
     end
+
+	local button1 = nil
+
+	if self.teamNumber == 1 then
     
-    print(buttonColors[self.teamNumber])
-    local button1 = widget.newButton(
-        {
-            width = 150,
-            height = 150,
-            defaultFile = "images/buttons/q_button_" .. buttonColors[self.teamNumber] .. "150x150.png",
-            overFile = "images/buttons/q_button_pressed150x150.png",
-            label = "button",
-            onEvent = handleButtonEvent
-        }
-    )
+		button1 = widget.newButton(
+			{
+				width = 71,
+				height = 117,
+				defaultFile = "images/buttons/fire-button.png",
+				overFile = "images/buttons/fire-button-pressed.png",
+				label = "button",
+				onEvent = handleButtonEvent
+			}
+		)
+
+	elseif self.teamNumber == 2 then
+    
+		button1 = widget.newButton(
+			{
+				width = 71,
+				height = 117,
+				defaultFile = "images/buttons/water-button.png",
+				overFile = "images/buttons/water-button-pressed.png",
+				label = "button",
+				onEvent = handleButtonEvent
+			}
+		)
+
+	end
 
     -- Center the button
     button1.x = self.x
     button1.y = self.y
-    button1.rotation = buttonRotation[self.teamNumber]
-    button1.alpha=0.01
 
     -- Change the button's label text
     button1:setLabel( "" )

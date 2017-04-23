@@ -52,13 +52,13 @@ function scene:createScene( event )
     ActionButton:create({
     	layer = self.layerButtons,
 		teamNumber = teamOne, 
-		x = 75,
+		x = 50,
 		y = 768 - 75})
 
 	ActionButton:create({
 		layer = self.layerButtons,
 		teamNumber = teamTwo, 
-		x = 1024 - 75,
+		x = 1024 - 50,
 		y = 768 - 75})
 
 	self.flashCurtain = display.newRect(self.layerStart, 1024/2, 768/2, 1024, 768 )
