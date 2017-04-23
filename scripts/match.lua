@@ -224,6 +224,12 @@ function scene:reset(event)
 		self.redVictory.alpha = 0
 		self.secondsRemaining = 120
 		timer.resume(self.updateSecondsTimer)
+		self.board.zones[1].zoneState = 1
+		self.board.zones[2].zoneState = 2
+		self.board.zones[3].zoneState = 1
+		self.board.zones[4].zoneState = 2
+		self.board.zones[5].zoneState = 1
+		self.board.zones[6].zoneState = 2
 	end 
 end 
 
@@ -254,7 +260,7 @@ function scene:update()
 	self.progress.x = ((progressWidth * 2) * (onFirePercent / 100)) - progressWidth
 	self.secondsRemainingTextLabel.text = math.floor(self.secondsRemaining / 60) .. ":" .. (self.secondsRemaining- math.floor(self.secondsRemaining / 60) * 60)
 
-	if self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
+	if self.victoryOn == false and self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
 		timer.pause(self.updateSecondsTimer)
 		print("end game " .. onFirePercent)
 
