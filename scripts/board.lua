@@ -90,6 +90,12 @@ function board:init(options)
 
 		createZone(200, 300)
 		createZone(1024-200, 300)
+
+		createZone(200, 510)
+		createZone(1024-200, 510)
+
+		createZone(1024/2, 410)
+		createZone(1024/2, 610)
 	end
 
 	createPlatforms()
@@ -105,6 +111,10 @@ end
 function board:update()
 	for i, person in ipairs(self.persons) do
 		person:setMinY(self.entities)
+	end
+
+	for i, person in ipairs(self.persons) do
+		person:setPunchTarget(self.persons)
 	end
 
 	for i, item in ipairs(self.items) do

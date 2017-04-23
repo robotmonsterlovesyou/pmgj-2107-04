@@ -58,12 +58,13 @@ function zone:checkCollisions(persons)
 					and person.item.itemType == itemTypeFlameThrower
 					and self.zoneState ~= zoneStateOnFire then
 						self.zoneState = zoneStateOnFire
-						person:dropItem()
+						person:useItem()
+
 				elseif person.teamNumber == 2 
 					and person.item.itemType == itemTypeExtinguisher
 					and self.zoneState ~= zoneStateNormal then
 						self.zoneState = zoneStateNormal
-						person:dropItem()
+						person:useItem()
 				end 
 
 			-- 	person:takeItem(self)

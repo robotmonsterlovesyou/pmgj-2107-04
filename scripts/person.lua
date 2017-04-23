@@ -1,7 +1,8 @@
 person = inheritsFrom( nil )
 
-guyWidth = 30
-guyHeight = 30
+guyWidth = 40
+guyHeight = 40
+speed = 8
 
 function person:init(options)
 	local x = options.x
@@ -15,7 +16,7 @@ function person:init(options)
 	self.sfxSuperheroLanding = audio.loadSound("audio/sfx_attack_slam.wav")
 	self.sfxJumpLand = audio.loadSound("audio/sfx_player_landing.wav")
 
-	self.vx = 6
+	self.vx = speed
 	self.vy = 0
 
 	self.minY = 768 - 120;
@@ -120,6 +121,7 @@ function person:init(options)
 	self.againstWall = false 
 	self.againstFloor = true
 	self.jumping = false
+	self.frozen = false
 
 	if self.teamNumber == 2 then
 		self.guy.xScale = self.guy.xScale * -1
@@ -144,6 +146,21 @@ function person:takeItem(item)
 	self.body:insert(self.item.body)
 end 
 
+function person:useItem()
+	self.frozen = true
+	self.guy:setSequence( "stand" )
+	self.guy:play()
+	
+	transition.pause(self.teamNumber .. "itemRotation")
+	timer.cancel(self.itemDelay)
+	self.item.body.rotation = 0
+
+	timer.performWithDelay(1000, function()
+		self:dropItem()
+		self.frozen = false
+	end)
+end 
+
 function person:dropItem()
 	self.item.held = false
 	self.item.body.x = math.random(1024 - 200) + 100
@@ -152,42 +169,82 @@ function person:dropItem()
 	self.item = nil
 end
 
+function person:bePunched()
+	self:dropItem()
+
+	-- self.frozen = true
+	-- self.guy:setSequence( "stand" )
+	-- self.guy:play()
+
+end 
+
+function person:punch()
+	self.target:bePunched()
+
+end
+
+function person:setPunchTarget(persons)
+	local newTarget
+	for i, person in ipairs(persons) do
+		if person ~= self then
+			if (person.body.x + guyWidth/2) > (self.body.x - guyWidth/2) and
+				(person.body.x - guyWidth/2) < (self.body.x + guyWidth/2) and
+				(person.body.y + guyHeight/2) > (self.body.y - guyHeight/2) and
+				(person.body.y - guyHeight/2) < (self.body.y + guyHeight/2) then
+
+				newTarget = person 
+			end
+		end
+	end
+	self.target = newTarget
+end
+
 function person:handleUserAction(event)
 	if event.phase == "began" and event.teamNumber == self.teamNumber then
-		if self.againstWall then
-			self.vx = self.vx * -1
-			self.againstWall = false 
-			self.guy.xScale = self.guy.xScale * -1
-		end 
 
-		if self.teamNumber == 1 then
-			audio.play(self.sfxJumpPlayer1)
-		elseif self.teamNumber == 2 then
-			audio.play(self.sfxJumpPlayer2)
+		------------ punch!
+		if self.target then
+			self:punch()
+
+		------------ normal jump
+		else 
+			if self.againstWall then
+				self.vx = self.vx * -1
+				self.againstWall = false 
+				self.guy.xScale = self.guy.xScale * -1
+			end 
+
+			if self.teamNumber == 1 then
+				audio.play(self.sfxJumpPlayer1)
+			elseif self.teamNumber == 2 then
+				audio.play(self.sfxJumpPlayer2)
+			end
+				
+			self.vy = -16
+			self.guy:setSequence("jump")
+			self.guy:play()
+			self.againstFloor = false
+			self.jumping = true
+
+			local context = self
+			if context.item then
+				self.itemDelay = timer.performWithDelay(200, function()
+					if context.item then
+						transition.to(context.item.body, {time=350, rotation=360, tag=context.teamNumber .. "itemRotation", onComplete=function()
+							if context.item then 
+								context.item.body.rotation=0
+							end 
+						end})
+					end
+				end)
+			end 
 		end
-			
-		self.vy = -16
-		self.guy:setSequence("jump")
-		self.guy:play()
-		self.againstFloor = false
-		self.jumping = true
-
-		local context = self
-		if context.item then
-			timer.performWithDelay(200, function()
-				if context.item then
-					transition.to(context.item.body, {time=350, rotation=360, onComplete=function()
-						if context.item then 
-							context.item.body.rotation=0
-						end 
-					end})
-				end
-			end)
-		end 
 	end 
 end
 
 function person:update()
+	if self.frozen then return end
+
 	local maxRight = 1000
 	local maxLeft = 24
 
