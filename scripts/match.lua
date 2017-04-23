@@ -23,6 +23,8 @@ matchSetup = 1
 matchRunning = 2
 matchComplete = 3
 
+matchLength = 120
+
 function scene:createScene( event )
 	
 	print("=============================== BEGIN =================================")
@@ -74,7 +76,7 @@ function scene:createScene( event )
 		x = 1024 - 50,
 		y = 768 - 75})
 
-	self.secondsRemaining = 120
+	self.secondsRemaining = matchLength
 
 	self.flashCurtain = display.newRect(self.layerStart, 1024/2, 768/2, 1024, 768 )
 	self.flashCurtain:setFillColor( 0.68, 0.85, 0.90 )
@@ -99,9 +101,10 @@ function scene:createScene( event )
 
 	local secondsRemainingTextLabelOptions = {}
 	secondsRemainingTextLabelOptions.text = self.secondsRemaining
-	secondsRemainingTextLabelOptions.x = 1024/2
-	secondsRemainingTextLabelOptions.y = 670
+	secondsRemainingTextLabelOptions.x = 1024/2 - 30
+	secondsRemainingTextLabelOptions.y = 678
 	secondsRemainingTextLabelOptions.align = "center"
+	secondsRemainingTextLabelOptions.fontSize = 30
 
 	self.secondsRemainingTextLabel = display.newText(secondsRemainingTextLabelOptions)
 	self.secondsRemainingTextLabel:setFillColor(0, 0, 0)
@@ -221,8 +224,14 @@ function scene:reset(event)
 		self.victoryOn = false
 		self.blueVictory.alpha = 0
 		self.redVictory.alpha = 0
-
-
+		self.secondsRemaining = matchLength
+		timer.resume(self.updateSecondsTimer)
+		self.board.zones[1].zoneState = 1
+		self.board.zones[2].zoneState = 2
+		self.board.zones[3].zoneState = 2
+		self.board.zones[4].zoneState = 2
+		self.board.zones[5].zoneState = 1
+		self.board.zones[6].zoneState = 1
 	end 
 end 
 
@@ -253,10 +262,11 @@ function scene:update()
 	self.progress.x = ((progressWidth * 2) * (onFirePercent / 100)) - progressWidth
 	self.secondsRemainingTextLabel.text = math.floor(self.secondsRemaining / 60) .. ":" .. (self.secondsRemaining- math.floor(self.secondsRemaining / 60) * 60)
 
-	if self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
+	if self.victoryOn == false and self.secondsRemaining == 0 or (onFirePercent == 0 or onFirePercent == 100) then
+		timer.pause(self.updateSecondsTimer)
 		print("end game " .. onFirePercent)
 
-		if onFirePercent == 100 then
+		if onFirePercent >= 50 then
 			self:showVictory(1)
 		else
 			self:showVictory(2)
