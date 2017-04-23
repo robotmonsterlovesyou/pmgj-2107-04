@@ -7,6 +7,9 @@ function person:init(options)
 	self.teamNumber = options.teamNumber
 	self.collisionEntities = options.collisionEntities
 
+	self.sfxJumpPlayer1 = audio.loadSound("audio/sfx_player1_jump.wav")
+	self.sfxJumpPlayer2 = audio.loadSound("audio/sfx_player2_jump.wav")
+
 	self.vx = 6
 	self.vy = 0
 
@@ -132,6 +135,12 @@ function person:handleUserAction(event)
 			self.againstWall = false 
 			self.body.xScale = self.body.xScale * -1
 		end 
+
+		if self.teamNumber == 1 then
+			audio.play(self.sfxJumpPlayer1)
+		elseif self.teamNumber == 2 then
+			audio.play(self.sfxJumpPlayer2)
+		end
 			
 		self.vy = -16
 		self.body:setSequence("jump")
