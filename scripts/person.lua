@@ -212,7 +212,6 @@ function person:setMinY(platforms)
 	end
 
 	self.minY = latestMinY
-	print(self.minY)
 end 
 
 function getBoundsFromEntity (entity)
