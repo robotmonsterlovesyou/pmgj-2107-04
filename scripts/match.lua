@@ -258,7 +258,7 @@ function scene:update()
 		timer.pause(self.updateSecondsTimer)
 		print("end game " .. onFirePercent)
 
-		if onFirePercent == 100 then
+		if onFirePercent >= 50 then
 			self:showVictory(1)
 		else
 			self:showVictory(2)
