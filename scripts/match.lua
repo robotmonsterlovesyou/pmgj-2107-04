@@ -80,10 +80,16 @@ function scene:createScene( event )
 	self.progress.anchorX = 0
 	self.progress.anchorY = 0
 
-	self.background = display.newImageRect("images/background-nofire.png", 1024, 768)
-	self.layerBackground:insert(self.background)
-	self.background.anchorX = 0
-	self.background.anchorY = 0
+	self.backgroundNoFire = display.newImageRect("images/background-nofire.png", 1024, 768)
+	self.layerBackground:insert(self.backgroundNoFire)
+	self.backgroundNoFire.anchorX = 0
+	self.backgroundNoFire.anchorY = 0
+
+	self.backgroundMostFire = display.newImageRect("images/background-most_fire.png", 1024, 768)
+	self.layerBackground:insert(self.backgroundMostFire)
+	self.backgroundMostFire.anchorX = 0
+	self.backgroundMostFire.anchorY = 0
+	self.backgroundMostFire.alpha = 0.5
 
 	function addListeners()
 
@@ -161,6 +167,10 @@ end
 
 function scene:update()
 	-- self.background:update()
+	local progressWidth = 255
+	local onFirePercent = 50
+	self.backgroundMostFire.alpha = onFirePercent / 100
+	self.progress.x = (progressWidth * 2 / (onFirePercent + 1)) - progressWidth
 end
 
 -- Called when scene is about to move offscreen:
