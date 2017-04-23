@@ -34,6 +34,9 @@ function scene:createScene( event )
 		audio.setVolume(0)
 	end
 
+	local bgMusic = audio.loadSound("audio/mx_mainsong.mp3")
+	audio.play(bgMusic)
+
 -- if self.shakeValue > 0 then
 -- self.body.x = self.baseX + math.random(self.shakeValue) - self.shakeValue/2
 -- self.body.y = self.baseY + math.random(self.shakeValue) - self.shakeValue/2
