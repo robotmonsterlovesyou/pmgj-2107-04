@@ -99,9 +99,10 @@ function scene:createScene( event )
 
 	local secondsRemainingTextLabelOptions = {}
 	secondsRemainingTextLabelOptions.text = self.secondsRemaining
-	secondsRemainingTextLabelOptions.x = 1024/2
-	secondsRemainingTextLabelOptions.y = 670
+	secondsRemainingTextLabelOptions.x = 1024/2 - 30
+	secondsRemainingTextLabelOptions.y = 678
 	secondsRemainingTextLabelOptions.align = "center"
+	secondsRemainingTextLabelOptions.fontSize = 30
 
 	self.secondsRemainingTextLabel = display.newText(secondsRemainingTextLabelOptions)
 	self.secondsRemainingTextLabel:setFillColor(0, 0, 0)
