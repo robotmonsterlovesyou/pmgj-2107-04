@@ -10,6 +10,8 @@ function person:init(options)
 	self.vx = 6
 	self.vy = 0
 
+	self.minY = 768 - 120;
+
 	function addGuySpriteSheet()
 		local options =
 		{
@@ -130,25 +132,11 @@ function person:handleUserAction(event)
 end
 
 function person:update()
-	local floorY = 768 - 120
 	local maxRight = 1000
 	local maxLeft = 24
 
-	local minY = floorY
-
-	currentCollision = checkCollision(self, self.collisionEntities)
-	if currentCollision then
-		self.body.y = math.min(self.body.y + self.vy, getBoundsFromEntity(currentCollision).y)
-		if self.againstFloor == false then
-			self.guy:setSequence( "run" )
-			self.guy:play()
-			self.againstFloor = true
-			self.vy = 0
-		end
-	else
-		self.vy = self.vy + 1
-		self.body.y = self.body.y + self.vy
-	end
+	self.vy = self.vy + 1
+	self.body.y = math.min(self.body.y + self.vy, self.minY)
 
 	local newXLocation
 	if self.vx > 0 then 
@@ -168,27 +156,28 @@ function person:update()
 end
 
 function person:setMinY(platforms)
-	local guyX = self.body.x
-	local guyWidth = 30
 
-	local floorY = 768 - 120
-	local minY = floorY
+	local latestMinY = 768 - 120
+
+	local guyBounds = getBoundsFromEntity(self)
 
 	for k, platform in pairs(platforms) do
 		local platformBounds = getBoundsFromEntity(platform)
+		platform.body:setFillColor(255, 255, 255)
 
-		if (guyX < platformBounds.x + platformBounds.width and
-			guyX + guyWidth > platformBounds.x) then
-
-			local platformY = platformBounds.y
-			if platformY < minY then
-				minY = platformY
-			end 
+		if (platformBounds.y > guyBounds.y and
+			guyBounds.y + guyBounds.height < platformBounds.y and
+			platformBounds.x < guyBounds.x and
+			guyBounds.x + guyBounds.width < platformBounds.x + platformBounds.width) then
+			if (platformBounds.y <= latestMinY) then
+				latestMinY = platformBounds.y
+				platform.body:setFillColor(0, 255, 0)
+			end
 		end
+
 	end
 
-	self.minY = minY
-	print(minY)
+	self.minY = latestMinY
 end 
 
 function getBoundsFromEntity (entity)
