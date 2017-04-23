@@ -74,6 +74,12 @@ function scene:createScene( event )
 	self.flashCurtain:setFillColor( 0.68, 0.85, 0.90 )
 	self.flashCurtain.alpha = 0
 
+	self.progress = display.newImageRect("images/ui/progress-bar.png", 1024, 24)
+	self.layerBackground:insert(self.progress)
+	self.progress.y = 726
+	self.progress.anchorX = 0
+	self.progress.anchorY = 0
+
 	self.background = display.newImageRect("images/background-nofire.png", 1024, 768)
 	self.layerBackground:insert(self.background)
 	self.background.anchorX = 0
