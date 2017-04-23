@@ -222,6 +222,7 @@ function scene:reset(event)
 		self.blueVictory.alpha = 0
 		self.redVictory.alpha = 0
 
+
 	end 
 end 
 

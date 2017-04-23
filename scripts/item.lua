@@ -12,6 +12,7 @@ function item:init(options)
 	local x = options.x
 	local y = options.y
 	local itemPic = options.itemPic or 1
+	local otherimage = options.otherimage
 
 	self.layer = layer
 	self.width = itemWidth
@@ -32,14 +33,21 @@ function item:init(options)
 	self.box:setStrokeColor(1,0,0,1)
 	self.letter:setFillColor(1,0,0,1)
 
-	self.image = display.newImageRect("images/players/item-fire-" .. itemPic .. ".png", 50, 42)
 
 	if self.itemType == itemTypeExtinguisher then
 		self.image = display.newImageRect("images/players/item-water-" .. itemPic .. ".png", 50, 42)
 		self.box:setStrokeColor(0,0,1,1)
 		self.letter:setFillColor(0,0,1,1)
 		self.letter.text = "E"
-	end 
+		if otherimage then 
+			self.image = display.newImageRect("images/players/item-water-3.png", 40, 42)
+		end
+	else
+		self.image = display.newImageRect("images/players/item-fire-" .. itemPic .. ".png", 50, 42)
+		if otherimage then 
+			self.image = display.newImageRect("images/players/item-fire-2.png", 50, 42)
+		end
+	end
 
 	self.image.x = 30
 

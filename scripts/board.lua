@@ -66,16 +66,21 @@ function board:init(options)
 	function createItems()
 		self.items = {};
 
-		function createItem(x, y, itemType)
+		function createItem(x, y, itemType, otherimage)
 			table.insert(self.items, Item:create({
 				layer = self.itemLayer,
 				x = x, y = y,
-				itemType = itemType
+				itemType = itemType,
+				otherimage = otherimage
 			}))
 		end 
 
-		createItem(150, 768-100, itemTypeFlameThrower)
-		createItem(300, 768-100, itemTypeExtinguisher)
+		createItem(200, 150, itemTypeFlameThrower)
+		createItem(350, 150, itemTypeExtinguisher)
+
+
+		createItem(1024- 350, 150, itemTypeFlameThrower, true)
+		createItem(1024-200, 150, itemTypeExtinguisher, true)
 	end
 
 	function createZones()
