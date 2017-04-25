@@ -154,7 +154,30 @@ function person:init(options)
 	self.updateTimer = timer.performWithDelay(10, function() 
 		self:update()
 	end, 0)
-end 
+
+	local function onKeyEvent (event)
+
+		if (event.phase == "down") then
+
+			if ((event.keyName == "z" and self.teamNumber == 1) or (event.keyName == "m" and self.teamNumber == 2)) then
+
+				local jumpPressedEvent = {
+					name = "actionPressed",
+					teamNumber = self.teamNumber,
+					phase = "began"
+				}
+
+				self:handleUserAction(jumpPressedEvent);
+
+			end
+
+		end
+
+	end
+
+	Runtime:addEventListener("key", onKeyEvent)
+
+end
 
 function person:takeItem(item)
 	self.item = item
